@@ -129,6 +129,6 @@ Se probaron los siguientes casos:
 Para correr los tests:
 go test
 
-## Autor
+## Autora
 Laura Sofia Aguirre Urrego
 Aprendiz SENA
