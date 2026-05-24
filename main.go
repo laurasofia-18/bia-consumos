@@ -1,12 +1,12 @@
 package main
 
 import (
-	"database/sql"  // permite trabajar con bases de datos
-	"encoding/json" // permite convertir datos a JSON
-	"fmt"           // permite imprimir mensajes
+	"database/sql"  // me permite trabajar con bases de datos
+	"encoding/json" // convierte datos a JSON
+	"fmt"           // imprime mensajes
 	"net/http"      // permite crear un servidor web
 	"strings"
-	"time" // permite trabajar con fechas
+	"time" // deja trabajar con fechas
 
 	// permite manipular cadenas de texto
 	_ "github.com/go-sql-driver/mysql" // el traductor entre Go y MySQL
@@ -20,7 +20,7 @@ type Consumo struct {
 	Date         string  `json:"date"`          // fecha del consumo
 }
 
-// RespuestaConsumo es el formato final que se enviara
+// RespuestaConsumo es para mostrar el formato final que se enviara
 type RespuestaConsumo struct {
 	Period    []string    `json:"period"`     // lista de fechas
 	DataGraph []DataGraph `json:"data_graph"` // lista de medidores
@@ -28,9 +28,9 @@ type RespuestaConsumo struct {
 
 // DataGraph tiene la informacion de cada medidor
 type DataGraph struct {
-	MeterId            int       `json:"meter_id"` // número del medidor
-	Address            string    `json:"address"`  // dirección del medidor
-	Active             []float64 `json:"active"`   // lista de consumos
+	MeterId            int       `json:"meter_id"` 
+	Address            string    `json:"address"`  
+	Active             []float64 `json:"active"`   
 	ReactiveInductive  []float64 `json:"reactive_inductive"`
 	ReactiveCapacitive []float64 `json:"reactive_capacitive"`
 	Exported           []float64 `json:"exported"`
@@ -40,7 +40,7 @@ type DataGraph struct {
 var conexion *sql.DB
 
 func main() {
-	// Aquí se le dice a Go cómo conectarse a MySQL
+	// Aquí se le digo a Go cómo conectarse a MySQL
 	// usuario:contraseña@dirección/nombre_base_de_datos
 	var err error
 	conexion, err = sql.Open("mysql", "root:@tcp(127.0.0.1:3306)/bia-consumos")
@@ -56,8 +56,7 @@ func main() {
 
 	fmt.Println("¡Conexión exitosa con la base de datos!")
 
-	// Se crea el enrutador, es como el recepcionista que
-	// dirige cada pregunta a la puerta correcta
+	// Creo el enrutador, es como el recepcionista que dirige cada pregunta a la puerta correcta
 	enrutador := mux.NewRouter()
 
 	// Registra  la primera puerta (endpoint)
@@ -117,7 +116,7 @@ func obtenerConsumos(w http.ResponseWriter, r *http.Request) {
 	endDate := r.URL.Query().Get("end_date")
 	kindPeriod := r.URL.Query().Get("kind_period")
 
-	// Imprimimos los parámetros para verificar que llegaron bien
+	// Imprimo los parámetros para verificar que llegaron bien
 	fmt.Println("Medidores:", listaIds)
 	fmt.Println("Fecha inicio:", startDate)
 	fmt.Println("Fecha fin:", endDate)
@@ -127,10 +126,10 @@ func obtenerConsumos(w http.ResponseWriter, r *http.Request) {
 	var periodos []string
 	var dataGraph []DataGraph
 
-	// Recorremos cada medidor de la lista
+	// Recorre cada medidor de la lista
 	for _, id := range listaIds {
 
-		// Listas de consumos para este medidor
+		// Listas de consumos para el medidor
 		var activos []float64
 		var consumos []Consumo
 		calcularPeriodos := len(periodos) == 0
@@ -150,12 +149,12 @@ func obtenerConsumos(w http.ResponseWriter, r *http.Request) {
 					finSemana = fin
 				}
 
-				// Solo agregamos los períodos para el primer medidor
+				// Solo agrega los períodos para el primer medidor
 				if calcularPeriodos {
 					periodos = append(periodos, formatearFecha(inicio)+" - "+formatearFecha(finSemana))
 				}
 
-				// Consultamos el consumo de esa semana
+				// Consulta el consumo de esa semana
 				total := obtenerConsumoPorRango(id, inicio.Format("2006-01-02"), finSemana.Format("2006-01-02"))
 				activos = append(activos, total)
 
@@ -163,7 +162,7 @@ func obtenerConsumos(w http.ResponseWriter, r *http.Request) {
 				inicio = inicio.AddDate(0, 0, 7)
 			}
 		} else {
-			// Para daily y monthly usamos consulta SQL
+			// Para daily y monthly se usa consulta SQL
 			var consulta string
 			if kindPeriod == "daily" {
 				consulta = "SELECT meter_id, SUM(active_energy) as active_energy, DATE(date) as date FROM consumos WHERE meter_id = ? AND date BETWEEN ? AND ? GROUP BY meter_id, DATE(date) ORDER BY date"
@@ -171,16 +170,17 @@ func obtenerConsumos(w http.ResponseWriter, r *http.Request) {
 				consulta = "SELECT meter_id, SUM(active_energy) as active_energy, DATE(date) as date FROM consumos WHERE meter_id = ? AND date BETWEEN ? AND ? GROUP BY meter_id, DATE_FORMAT(date,'%Y-%m') ORDER BY date"
 			}
 
-			filas, err := conexion.Query(consulta, id, startDate, endDate)
+			registros, err := conexion.Query(consulta, id, startDate, endDate)
 			if err != nil {
 				fmt.Println("Error al consultar:", err)
 				return
 			}
-			defer filas.Close()
+			defer registros.Close()
 
-			for filas.Next() {
+			// acá voy guardando cada dato que me trae la base de datos
+                for registros.Next() {
 				var consumo Consumo
-				filas.Scan(&consumo.MeterId, &consumo.ActiveEnergy, &consumo.Date)
+				registros.Scan(&consumo.MeterId, &consumo.ActiveEnergy, &consumo.Date)
 				consumos = append(consumos, consumo)
 			}
 
