@@ -116,9 +116,7 @@ GET http://localhost:8080/consumption?meters_ids=1,2&start_date=2023-06-01&end_d
 
 ## ¿Por qué utilicé tests unitarios?
 
-Estos se implementaron para verificar que las funciones 
-principales del proyecto funcionan correctamente. Se probaron las funciones de formateo de fechas ya que son fundamentales para que la respuesta del 
-endpoint tenga el formato correcto.
+Estos se implementaron para verificar que las funciones principales del proyecto funcionan correctamente. Probe las funciones de formateo de fechas ya que son fundamentales para que la respuesta del endpoint tenga el formato correcto.
 
 Se probaron los siguientes casos:
 - `TestFormatearFecha`: verifica que una fecha se convierta correctamente 

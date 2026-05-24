@@ -1,22 +1,22 @@
 package main
 
 import (
-	"database/sql"
-	"encoding/json"
-	"fmt"
-	"net/http"
-	"strings"
-	"time"
+	"database/sql"  // me permite trabajar con bases de datos
+	"encoding/json" // convierte datos a JSON
+	"fmt"           // imprime mensajes en la consola
+	"net/http"      // permite crear un servidor web
+	"strings"       // permite manipular cadenas de texto
+	"time"          // deja trabajar con fechas
 
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/gorilla/mux"
+	_ "github.com/go-sql-driver/mysql"  //es el traductor entre Go y MYSQL
+	"github.com/gorilla/mux"            // manejar los endpoints
 )
 
 // Consumo representa un registro de la tabla consumos
 type Consumo struct {
-	MeterId      int     `json:"meter_id"`
-	ActiveEnergy float64 `json:"active_energy"`
-	Date         string  `json:"date"`
+	ActiveEnergy float64 `json:"active_energy"`  // número del medidor 
+	MeterId      int     `json:"meter_id"`      //	energía consumida
+	Date         string  `json:"date"`          //  Fecha del consumo
 }
 
 // RespuestaConsumo es el formato final que se enviará
