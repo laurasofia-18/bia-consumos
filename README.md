@@ -130,5 +130,4 @@ Para correr los tests:
 go test
 
 ## Autora
-Laura Sofia Aguirre Urrego
-Aprendiz SENA
+Laura Sofia Aguirre Urrego Aprendiz SENA
