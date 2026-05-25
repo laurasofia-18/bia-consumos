@@ -119,16 +119,6 @@ Respuesta:
 ### Múltiples medidores
 GET http://localhost:8080/consumption?meters_ids=1,2&start_date=2023-06-01&end_date=2023-06-10&kind_period=daily
 
-## ¿Por qué utilicé tests unitarios?
-
-Estos se implementaron para verificar que las funciones principales del proyecto funcionan correctamente. Probe las funciones de formateo de fechas ya que son fundamentales para que la respuesta del endpoint tenga el formato correcto.
-
-Se probaron los siguientes casos:
-- `TestFormatearFecha`: verifica que una fecha se convierta correctamente 
-  al formato "JUN 1"
-- `TestFormatearMes`: verifica que una fecha se convierta correctamente 
-  al formato "JUN 2023"
-
 Para correr los tests:
 go test
 
