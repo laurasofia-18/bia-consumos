@@ -11,6 +11,11 @@ En el siguiente README voy a Explicar el funcionamiento de este microservicio qu
 - Tener instalado Go 1.21 o superior
 - Tener instalado XAMPP con MySQL corriendo en el puerto 3306
 
+## ⚠️ Nota
+Los endpoints funcionan localmente. 
+Para probarlos debes clonar el proyecto, 
+configurar la base de datos y correr el servidor.
+
 ## Cómo instalar y correr el proyecto
 
 ### 1. Clonar el repositorio
